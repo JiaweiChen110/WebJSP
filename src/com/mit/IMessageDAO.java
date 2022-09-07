@@ -10,7 +10,12 @@ public class IMessageDAO {
 		int status = 0;
 		try {
 			conn = DBConnection.getCon();
-			pst = conn.prepareStatement("INSERT INTO messagedb values(?,?)");
+			pst = conn.prepareStatement("INSERT INTO messagedb (key,message)" +
+							"VALUES(?,?)" +
+							"ON CONFLICT (key)" +
+							"DO UPDATE SET" +
+							"message = EXCLUDED.message"
+							);
 			pst.setString(1, m.getKey());
 			pst.setString(2, m.getMessage());
 			status = pst.executeUpdate();
